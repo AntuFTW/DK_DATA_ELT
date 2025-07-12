@@ -1,0 +1,1 @@
+dbt debug -> command tests if you can connect to the remote snowflake database
