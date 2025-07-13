@@ -9,3 +9,12 @@ I am using both Snowcli and snowflake-cli, not sure which ones
 each unique book store number will have the same store name/area name or soemthing else similar
 
 check if all the columns i said were unique were actually unique
+
+
+- alot of the data is redundent in the columns, eg the area code as that is included somewhere else, so this can be removed.
+
+- PRODUCT_GROUP, DEPARTMENT and SUB_DEPARTMENT and CLASS are also very similar and should be checked if any of these can be dropped.
+
+- columns like CORE_STOCK_FLAG should also be figured out.
+
+- DO RESEARCH on all these columns to see what they mean
