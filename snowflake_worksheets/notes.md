@@ -7,3 +7,5 @@ the create environment.sql creates the roles, schema, database warehouse and oth
 I am using both Snowcli and snowflake-cli, not sure which ones
 
 each unique book store number will have the same store name/area name or soemthing else similar
+
+check if all the columns i said were unique were actually unique
