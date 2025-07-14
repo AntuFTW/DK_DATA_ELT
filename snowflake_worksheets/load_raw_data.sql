@@ -16,32 +16,32 @@ create or replace stage dk_data
 
 -- Create RAW_STORE_SALES
 create or replace table RAW_STORE_SALES (
-    CREATED_AT VARCHAR,
-    UPDATED_AT VARCHAR,
-    STORE_NUMBER VARCHAR,
+    CREATED_AT TIMESTAMP,
+    UPDATED_AT TIMESTAMP,
+    STORE_NUMBER NUMBER,
     STORE_NAME VARCHAR,
-    AREA_NUMBER VARCHAR,
+    AREA_NUMBER NUMBER,
     AREA_NAME VARCHAR,
-    ISBN VARCHAR,
+    ISBN VARCHAR, -- To prevent stripping 0
     AUTHOR VARCHAR, -- This column contains null values which should be dealt with
     TITLE VARCHAR,
     PUBLISHER VARCHAR,
     IMPRINT VARCHAR,
-    AVAILABILITY VARCHAR,
-    RRP VARCHAR,
+    AVAILABILTY VARCHAR,
+    RRP FLOAT,
     CORE_STOCK_FLAG VARCHAR,
-    PUBLICATION_DATE VARCHAR,
+    PUBLICATION_DATE VARCHAR, -- Cast to date later as its in DD/MM/YYYY format which snowflake does not accept
     PRODUCT_GROUP VARCHAR,
     DEPARTMENT VARCHAR,
     SUB_DEPARTMENT VARCHAR,
     CLASS VARCHAR,
-    QTY_ON_HAND VARCHAR,
-    QTY_ON_ORDER VARCHAR,
-    QTY_RECEIVED VARCHAR,
-    QTY_RETURNED VARCHAR,
-    QTY_SOLD VARCHAR,
-    HUB_QTY_ON_HAND VARCHAR,
-    HUB_QTY_ON_ORDER VARCHAR);
+    QTY_ON_HAND NUMBER,
+    QTY_ON_ORDER NUMBER,
+    QTY_RECEIVED NUMBER,
+    QTY_RETURNED NUMBER,
+    QTY_SOLD NUMBER,
+    HUB_QTY_ON_HAND NUMBER,
+    HUB_QTY_ON_ORDER NUMBER);
 
 -- Copy local CSV into Snowflake stage
 PUT 'file:////Users/ant/Documents/dk_data_ELT/snowflake_worksheets/store_sales.csv' 
