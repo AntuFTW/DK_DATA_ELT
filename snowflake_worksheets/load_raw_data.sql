@@ -27,7 +27,7 @@ create or replace table RAW_STORE_SALES (
     TITLE VARCHAR,
     PUBLISHER VARCHAR,
     IMPRINT VARCHAR,
-    AVAILABILTY VARCHAR,
+    AVAILABILITY VARCHAR,
     RRP VARCHAR,
     CORE_STOCK_FLAG VARCHAR,
     PUBLICATION_DATE VARCHAR,
@@ -44,7 +44,7 @@ create or replace table RAW_STORE_SALES (
     HUB_QTY_ON_ORDER VARCHAR);
 
 -- Copy local CSV into Snowflake stage
-PUT 'file:///Users/ant/Documents/dbt_snowflake_project_ELT/snowflake_worksheets/store_sales.csv' 
+PUT 'file:////Users/ant/Documents/dk_data_ELT/snowflake_worksheets/store_sales.csv' 
 @DK_DATA;
 
 -- Copy CSV into RAW_STORE_SALES table
