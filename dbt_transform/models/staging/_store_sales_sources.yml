@@ -1,0 +1,193 @@
+version: 2
+
+sources:
+  - name: store_sales
+    database: DK_ANALYTICS
+    schema: RAW
+    description: Schema storing the tables in the source, staging or intermediary modelling steps.
+    tables:
+      - name: RAW_STORE_SALES
+        description: Table that stores raw data of book sales from Snowflake internal stage. All columns are VARCHAR to ensure data is loaded without errors.
+        columns:
+          - name: AREA_NAME
+            description: General area in which the store which sold the book is located.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: AREA_NUMBER
+            description: Unique number corresponding to an area in the UK. This should be between 0 to 99 or 900 which is ecommerce
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: AUTHOR
+            description: Author/s of the corresponding book. If there are multiple Authors they are separted by ';' and each author is formatted as 'first_name, last_name'. If the Author is a company then the company name is written.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: AVAILABILITY
+            description: Availability of the book.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - accepted_values:
+                  values: ['In Print', 'Unknown', 'Reprinting, Date Kno', 'Out Of Print', 'Not Yet Published', 'Refer To Other Pbshe']
+          - name: CLASS
+            description: Most specific category of book, the most granular out of PRODUCT_GROUP, DEPARTMENT and SUB_DEPARTMENT.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: CORE_STOCK_FLAG
+            description: Grades how important a book is to the store.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - accepted_values:
+                  values: ['S', 'A', 'B', 'C', 'No', 'F', 'X', '9']
+          - name: CREATED_AT
+            description: The date and time the data was processed *All the same so they could be batch imported*
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][1-9]|2[0-4]):[0-5][0-9]:[0-5][0-9].[0-9]{3} Z"
+              - not_null
+          - name: DEPARTMENT
+            description: Specific category within the PRODUCT_GROUP.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - not_null
+          - name: HUB_QTY_ON_HAND
+            description: Total number of units of a book that are currently physically present and available in the central hub's inventor.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: HUB_QTY_ON_ORDER
+            description: Number of units that have bee ordered from the central hub's inventory but have not been received.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: IMPRINT
+            description: A trade name under which a publisher issues a book. It can denote a specific brand of the publisher eg. DK Children
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: ISBN
+            description: 13-digit unique identifier for books.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]{13}"
+          - name: PRODUCT_GROUP
+            description: Broadest group of books the particular book falls under.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: PUBLICATION_DATE
+            description: Date the book was published.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}"
+          - name: PUBLISHER
+            description: Publisher of book.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: QTY_ON_HAND
+            description: Copies of a book that are physically in stock at the specific store.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: QTY_ON_ORDER
+            description: Number of copies of the book that the store has ordered from the central inventory hub but not received.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: QTY_RECEIVED
+            description: Number of copies that the store has received from the central inventory hub
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: QTY_RETURNED
+            description: Number of copies that has been returned to the store.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: QTY_SOLD
+            description: Number of copies of he book sold by the store within a specific reporting period.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]+"
+          - name: RRP
+            description: Recommended Retail Price.
+            tests:
+              - not_null              
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "([0-9]+.[0-9]{2})|[0-9]+"
+          - name: STORE_NAME
+            description: The unique name of the store that the book was sold at. This also contains location information.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                    column_type: varchar
+          - name: STORE_NUMBER
+            description: The unique ID of the store the book was sold at.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]{1,3}"
+          - name: SUB_DEPARTMENT
+            description: Further refinement of Department (more granular).
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: TITLE
+            description: Title of book.
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+          - name: UPDATED_AT
+            description: The date and time the record was last modified. Eg. payment status update or a return.
+            tests:
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_values_to_match_regex:
+                  regex: "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][1-9]|2[0-4]):[0-5][0-9]:[0-5][0-9].[0-9]{3} Z"
+              - not_null
