@@ -20,9 +20,7 @@ sources:
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: AUTHOR
             description: Author/s of the corresponding book. If there are multiple Authors they are separted by ';' and each author is formatted as 'first_name, last_name'. If the Author is a company then the company name is written.
             tests:
@@ -31,6 +29,7 @@ sources:
           - name: AVAILABILITY
             description: Availability of the book.
             tests:
+              - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
               - accepted_values:
@@ -52,10 +51,9 @@ sources:
             description: The date and time the data was processed *All the same so they could be batch imported*
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][1-9]|2[0-4]):[0-5][0-9]:[0-5][0-9].[0-9]{3} Z"
+                  column_type: timestamp_ntz
               - not_null
+              - test_timestamp_in_past
           - name: DEPARTMENT
             description: Specific category within the PRODUCT_GROUP.
             tests:
@@ -66,16 +64,12 @@ sources:
             description: Total number of units of a book that are currently physically present and available in the central hub's inventor.
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: HUB_QTY_ON_ORDER
             description: Number of units that have bee ordered from the central hub's inventory but have not been received.
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: IMPRINT
             description: A trade name under which a publisher issues a book. It can denote a specific brand of the publisher eg. DK Children
             tests:
@@ -88,8 +82,6 @@ sources:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]{13}"
           - name: PRODUCT_GROUP
             description: Broadest group of books the particular book falls under.
             tests:
@@ -114,49 +106,37 @@ sources:
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: QTY_ON_ORDER
             description: Number of copies of the book that the store has ordered from the central inventory hub but not received.
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: QTY_RECEIVED
             description: Number of copies that the store has received from the central inventory hub
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: QTY_RETURNED
             description: Number of copies that has been returned to the store.
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: QTY_SOLD
             description: Number of copies of he book sold by the store within a specific reporting period.
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]+"
+                  column_type: number
           - name: RRP
             description: Recommended Retail Price.
             tests:
               - not_null              
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "([0-9]+.[0-9]{2})|[0-9]+"
+                  column_type: float
           - name: STORE_NAME
             description: The unique name of the store that the book was sold at. This also contains location information.
             tests:
@@ -168,9 +148,7 @@ sources:
             tests:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]{1,3}"
+                  column_type: number
           - name: SUB_DEPARTMENT
             description: Further refinement of Department (more granular).
             tests:
@@ -187,7 +165,5 @@ sources:
             description: The date and time the record was last modified. Eg. payment status update or a return.
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
-              - dbt_expectations.expect_column_values_to_match_regex:
-                  regex: "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][1-9]|2[0-4]):[0-5][0-9]:[0-5][0-9].[0-9]{3} Z"
-              - not_null
+                  column_type: timestamp_ntz
+              - test_timestamp_in_past
