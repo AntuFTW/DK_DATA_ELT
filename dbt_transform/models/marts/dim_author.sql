@@ -1,5 +1,10 @@
+with unique_authors as (
 select
-    row_number() over (order by AUTHOR_NAME) as DIM_AUTHOR_ID,
-    AUTHOR_NAME as DIM_AUTHOR_NAME
+    distinct AUTHOR_NAME as DIM_AUTHOR_NAME
 from
     {{ ref('int_store_sales__single_author_rows') }}
+)
+select
+    row_number() over (order by DIM_AUTHOR_NAME) as DIM_AUTHOR_ID,
+    *
+from unique_authors

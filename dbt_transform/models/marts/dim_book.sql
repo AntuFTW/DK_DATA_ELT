@@ -1,6 +1,6 @@
+with unique_books as (
 select
-    distinct DIM_BOOK_ID,
-    pa.ISBN as DIM_BOOK_ISBN,
+    distinct pa.ISBN as DIM_BOOK_ISBN,
     TITLE as DIM_BOOK_TITLE,
     PUBLISHER as DIM_BOOK_PUBLISHER,
     IMPRINT as DIM_BOOK_IMPRINT,
@@ -11,6 +11,9 @@ select
     CLASS as DIM_BOOK_CLASS
 from
     {{ ref('int_store_sales__single_author_rows') }} as pa
-    join
-    {{ ref('int_store_sales__generate_unqiue_id_for_isbn') }} as uIDfISBN
-    using (ISBN)
+)
+select
+    row_number() over (order by DIM_BOOK_ISBN) as DIM_BOOK_ID,
+    *
+from
+    unique_books

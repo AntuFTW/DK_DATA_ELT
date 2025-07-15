@@ -8,6 +8,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: DIM_AUTHOR_NAME
+        tests:
+          - unique
+          - not_null
   - name: dim_book
     description: Contains information about the unique books in the input data to help with analysis on specific books.
     columns:
@@ -22,3 +26,18 @@ models:
   - name: bridge_book_author
     description: Connects the dim_author and the dim_book using a bridge to transform the many to many relation into two one to many relationships.
     # Need to add relationship tests here
+  - name: dim_store
+    description: The table that stores all the unique stores and their information.
+    columns:
+      - name: DIM_STORE_ID
+        tests:
+          - not_null
+          - unique
+      - name: DIM_STORE_DK_NUMBER
+        tests:
+          - not_null
+          - unique
+    # Add tests to this also
+  - name: fct_sale
+    description: Main fact table which will like to dim_book and dim_store.
+    # Add relation ships tests to dim book and dim_store. It should also have the same number of rows as the input data.
