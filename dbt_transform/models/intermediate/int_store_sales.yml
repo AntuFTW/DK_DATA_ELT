@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_store_sales__clean_area_name
+    description: Cleaned the AREA_NAME column so the AREA_NUMBER is not included.
+  - name: int_store_sales__normalise_dk_publisher_name
+    description: The PUBLISHER column has both 'Dk' and 'Dk Publishing', these should both be 'Dk'
+    columns:
+      - name: PUBLISHER
+        tests:
+          - dbt_expectations.expect_column_values_to_not_be_in_set:
+              value_set: ['Dk Publishing']

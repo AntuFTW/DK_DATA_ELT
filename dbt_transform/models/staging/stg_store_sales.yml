@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_store_sales
+    columns:
+      - name: PUBLICATION_DATE
+        description: Casted publication date to a date type.
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: date

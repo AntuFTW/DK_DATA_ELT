@@ -27,7 +27,7 @@ create or replace table RAW_STORE_SALES (
     TITLE VARCHAR,
     PUBLISHER VARCHAR,
     IMPRINT VARCHAR,
-    AVAILABILTY VARCHAR,
+    AVAILABILITY VARCHAR,
     RRP FLOAT,
     CORE_STOCK_FLAG VARCHAR,
     PUBLICATION_DATE VARCHAR, -- Cast to date later as its in DD/MM/YYYY format which snowflake does not accept
@@ -44,7 +44,7 @@ create or replace table RAW_STORE_SALES (
     HUB_QTY_ON_ORDER NUMBER);
 
 -- Copy local CSV into Snowflake stage
-PUT 'file:////Users/ant/Documents/dk_data_ELT/snowflake_worksheets/store_sales.csv' 
+PUT 'file://store_sales.csv' 
 @DK_DATA;
 
 -- Copy CSV into RAW_STORE_SALES table
