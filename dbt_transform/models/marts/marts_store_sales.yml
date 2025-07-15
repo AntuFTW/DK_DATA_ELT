@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: dim_author
+    description: Contains the dimension table for author. Stores unique authors. Comes from flattening AUTHOR_ARRAY column for a book and taking unique values
+    columns:
+      - name: DIM_AUTHOR_ID
+        tests:
+          - unique
+          - not_null

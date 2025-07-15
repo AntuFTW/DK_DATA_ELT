@@ -10,3 +10,22 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_not_be_in_set:
               value_set: ['Dk Publishing']
+  - name: int_store_sales__fill_in_null_author
+    description: Fills in Null Authors with No_Author
+    columns:
+      - name: AUTHOR
+        tests:
+          - not_null
+  - name: int_store_sales__preprocess_author
+    description: Separates Authors into a list
+  - name: int_store_sales__generate_unqiue_id_for_isbn
+    description: Generates a numeric ID for every unique ISBN code
+    columns:
+      - name: DIM_BOOK_ID
+        tests:
+          - not_null
+          - unique
+      - name: ISBN
+        tests:
+          - not_null
+          - unique
