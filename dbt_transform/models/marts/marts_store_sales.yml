@@ -8,3 +8,17 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_book
+    description: Contains information about the unique books in the input data to help with analysis on specific books.
+    columns:
+      - name: DIM_BOOK_ID
+        tests:
+          - not_null
+          - unique
+      - name: DIM_BOOK_ISBN
+        tests:
+          - not_null
+          - unique
+  - name: bridge_book_author
+    description: Connects the dim_author and the dim_book using a bridge to transform the many to many relation into two one to many relationships.
+    # Need to add relationship tests here
