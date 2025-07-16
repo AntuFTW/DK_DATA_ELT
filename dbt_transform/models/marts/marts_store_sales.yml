@@ -41,7 +41,7 @@ models:
               to: ref('dim_author')
               field: DIM_AUTHOR_ID
   - name: dim_store
-    description: The table that stores all the unique stores and their information.
+    description: The table that stores all the unique stores and their information. This has to be a Slowly Changing Dimension table (SGD 2 in this case) to make sure that when the RRP is changed, it can be tracked.
     columns:
       - name: DIM_STORE_ID
         tests:
@@ -51,6 +51,18 @@ models:
         tests:
           - not_null
           - unique
+      - name: DIM_BOOK_RRP_CURRENTLY_VALID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: boolean
+      - name: DIM_BOOK_RRP_VALID_TO
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: date
+      - name: DIM_BOOK_RRP_VALID_FROM
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: date
     # Add tests to this also
   - name: fct_sale
     description: Main fact table which will track the sales of books.
