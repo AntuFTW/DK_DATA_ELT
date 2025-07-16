@@ -57,7 +57,12 @@ stock_events_created_and_updated_at_date_id as (
         join {{ ref('dim_date') }} dd on (secadi.UPDATED_AT_DATE = dd.DIM_DATE_DATE)
 )
 select
-    row_number() over (order by FCT_STOCK_UPDATE_CREATED_AT_DATE_ID) as FCT_STOCK_UPDATE_ID,
+    {{ dbt_utils.generate_surrogate_key([
+        'FCT_STOCK_UPDATE_CREATED_AT_TIME',
+        'FCT_STOCK_UPDATE_CREATED_AT_DATE_ID',
+        'DIM_STORE_ID',
+        'DIM_BOOK_ID'
+    ]) }} as FCT_STOCK_UPDATE_ID,
     *
 from
     stock_events_created_and_updated_at_date_id

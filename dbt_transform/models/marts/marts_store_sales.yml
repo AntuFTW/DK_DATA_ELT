@@ -26,7 +26,7 @@ models:
       - name: DIM_BOOK_PUBLICATION_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: number
+                  column_type: varchar
           - not_null
   - name: bridge_book_author
     description: Connects the dim_author and the dim_book using a bridge to transform the many to many relation into two one to many relationships.
@@ -86,7 +86,7 @@ models:
       - name: FCT_SALE_CREATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: number
+                  column_type: varchar
           - not_null
       - name: FCT_SALE_CREATED_AT_TIME
         tests:
@@ -96,7 +96,7 @@ models:
       - name: FCT_SALE_UPDATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: number
+                  column_type: varchar
           - not_null
       - name: FCT_SALE_UPDATED_AT_TIME
         tests:
@@ -123,7 +123,7 @@ models:
       - name: FCT_STOCK_UPDATE_CREATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: number
+                  column_type: varchar
           - not_null
       - name: FCT_STOCK_UPDATE_CREATED_AT_TIME
         tests:
@@ -133,7 +133,7 @@ models:
       - name: FCT_STOCK_UPDATE_UPDATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: number
+                  column_type: varchar
           - not_null
       - name: FCT_STOCK_UPDATE_UPDATED_AT_TIME
         tests:

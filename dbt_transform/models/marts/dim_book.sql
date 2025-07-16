@@ -15,7 +15,9 @@ with unique_books as (
         join {{ ref('dim_date') }} as dd on (pa.PUBLICATION_DATE = dd.DIM_DATE_DATE)
 )
 select
-    row_number() over (order by DIM_BOOK_ISBN) as DIM_BOOK_ID,
+    {{ dbt_utils.generate_surrogate_key([
+        'DIM_BOOK_ISBN'
+    ]) }} as DIM_BOOK_ID,
     *,
     null::DATE as DIM_BOOK_RRP_VALID_TO,
     True as DIM_BOOK_RRP_CURRENTLY_VALID

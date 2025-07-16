@@ -8,7 +8,9 @@ with unique_stores as (
         {{ ref('int_store_sales__fill_in_null_author') }}
 )
 select
-    row_number() over (order by DIM_STORE_DK_NUMBER) as DIM_STORE_ID,
+    {{ dbt_utils.generate_surrogate_key([
+        'DIM_STORE_DK_NUMBER'
+    ]) }} as DIM_STORE_ID,
     *
 from
     unique_stores

@@ -39,7 +39,12 @@ sale_events_created_and_updated_at_date_id as (
         join {{ ref('dim_date') }} dd on (secad.UPDATED_AT_DATE = dd.DIM_DATE_DATE)
 )
 select
-    row_number() over (order by FCT_SALE_CREATED_AT_DATE_ID) as FCT_SALE_ID,
+    {{ dbt_utils.generate_surrogate_key([
+        'FCT_SALE_CREATED_AT_DATE_ID', 
+        'FCT_SALE_CREATED_AT_TIME',
+        'DIM_STORE_ID',
+        'DIM_BOOK_ID'
+    ]) }} as FCT_SALE_ID,
     *
 from
     sale_events_created_and_updated_at_date_id

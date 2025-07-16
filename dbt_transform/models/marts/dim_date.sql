@@ -2,7 +2,9 @@ with unfiltered_date_dim as (
 {{ dbt_date.get_date_dimension("2020-01-01", "2030-12-31") }}
 )
 select
-    row_number() over (order by DATE_DAY) as DIM_DATE_ID,
+    {{ dbt_utils.generate_surrogate_key([
+        'DATE_DAY'
+    ]) }} as DIM_DATE_ID,
     DATE_DAY as DIM_DATE_DATE,
     DAY_OF_WEEK as DIM_DATE_DAY_OF_WEEK,
     DAY_OF_MONTH as DIM_DATE_DAY_OF_MONTH,
