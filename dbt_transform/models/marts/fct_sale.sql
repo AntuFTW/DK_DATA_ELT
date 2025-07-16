@@ -40,7 +40,7 @@ sale_events_created_and_updated_at_date_id as (
 )
 select
     {{ dbt_utils.generate_surrogate_key([
-        'FCT_SALE_CREATED_AT_DATE_ID', 
+        'FCT_SALE_CREATED_AT_DATE_ID',
         'FCT_SALE_CREATED_AT_TIME',
         'DIM_STORE_ID',
         'DIM_BOOK_ID'
