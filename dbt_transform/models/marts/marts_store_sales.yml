@@ -23,6 +23,11 @@ models:
         tests:
           - not_null
           - unique
+      - name: DIM_BOOK_PUBLICATION_DATE_ID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+          - not_null
   - name: bridge_book_author
     description: Connects the dim_author and the dim_book using a bridge to transform the many to many relation into two one to many relationships.
     columns:
@@ -64,6 +69,7 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: date
+
   - name: fct_sale
     description: Main fact table which will track the sales of books.
     columns:
@@ -77,7 +83,27 @@ models:
           - relationships:
               to: ref('dim_book')
               field: DIM_BOOK_ID
-  - name: fct_stock
+      - name: FCT_SALE_CREATED_AT_DATE_ID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+          - not_null
+      - name: FCT_SALE_CREATED_AT_TIME
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: time
+          - not_null
+      - name: FCT_SALE_UPDATED_AT_DATE_ID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+          - not_null
+      - name: FCT_SALE_UPDATED_AT_TIME
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: time
+          - not_null
+  - name: fct_stock_update
     description: Secondary fact table which will track the inventory of the story an the hub 
     columns:
       - name: DIM_STORE_ID
@@ -94,3 +120,27 @@ models:
         tests:
           - not_null
           - unique
+      - name: FCT_STOCK_UPDATE_CREATED_AT_DATE_ID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+          - not_null
+      - name: FCT_STOCK_UPDATE_CREATED_AT_TIME
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: time
+          - not_null
+      - name: FCT_STOCK_UPDATE_UPDATED_AT_DATE_ID
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+          - not_null
+      - name: FCT_STOCK_UPDATE_UPDATED_AT_TIME
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: time
+          - not_null
+      # Check that the size of the graph does not change as there may not be a date for every date in the first table (singular/generic test for this)
+  - name: dim_date
+    description: Dimension table created for dates. Has extra information such as month and quarter to make it easier for analysts to query
+    # Write this
