@@ -44,7 +44,7 @@ create or replace table RAW_STORE_SALES (
     HUB_QTY_ON_ORDER NUMBER);
 
 -- Copy local CSV into Snowflake stage
-PUT 'file://store_sales.csv' 
+PUT 'file://snowflake_worksheets/store_sales.csv' 
 @DK_DATA;
 
 -- Copy CSV into RAW_STORE_SALES table
