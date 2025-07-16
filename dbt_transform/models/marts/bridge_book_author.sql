@@ -1,4 +1,5 @@
 select
+    row_number() over (order by DIM_BOOK_ID) as BRIDGE_BOOK_AUTHOR_ID,
     DIM_AUTHOR_ID,
     DIM_BOOK_ID
 from

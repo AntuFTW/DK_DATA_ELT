@@ -25,7 +25,21 @@ models:
           - unique
   - name: bridge_book_author
     description: Connects the dim_author and the dim_book using a bridge to transform the many to many relation into two one to many relationships.
-    # Need to add relationship tests here
+    columns:
+      - name: BRIDGE_BOOK_AUTHOR_ID
+        tests:
+          - not_null
+          - unique
+      - name: DIM_BOOK_ID
+        tests:
+          - relationships:
+              to: ref('dim_book')
+              field: DIM_BOOK_ID
+      - name: DIM_AUTHOR_ID
+        tests:
+          - relationships:
+              to: ref('dim_author')
+              field: DIM_AUTHOR_ID
   - name: dim_store
     description: The table that stores all the unique stores and their information.
     columns:
@@ -39,5 +53,28 @@ models:
           - unique
     # Add tests to this also
   - name: fct_sale
-    description: Main fact table which will like to dim_book and dim_store.
-    # Add relation ships tests to dim book and dim_store. It should also have the same number of rows as the input data.
+    description: Main fact table which will track the sales of books.
+    columns:
+      - name: DIM_STORE_ID
+        tests:
+          - relationships:
+              to: ref('dim_store')
+              field: DIM_STORE_ID
+      - name: DIM_BOOK_ID
+        tests:
+          - relationships:
+              to: ref('dim_book')
+              field: DIM_BOOK_ID
+  - name: fct_stock
+    description: Secondary fact table which will track the inventory of the story an the hub 
+    columns:
+      - name: DIM_STORE_ID
+        tests:
+          - relationships:
+              to: ref('dim_store')
+              field: DIM_STORE_ID
+      - name: DIM_BOOK_ID
+        tests:
+          - relationships:
+              to: ref('dim_book')
+              field: DIM_BOOK_ID
