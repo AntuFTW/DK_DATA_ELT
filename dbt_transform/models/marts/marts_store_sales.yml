@@ -56,6 +56,7 @@ models:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: boolean
       - name: DIM_BOOK_RRP_VALID_TO
+        description: null values represent the RRP of the book still being valid.
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: date
@@ -63,7 +64,6 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: date
-    # Add tests to this also
   - name: fct_sale
     description: Main fact table which will track the sales of books.
     columns:
@@ -90,3 +90,7 @@ models:
           - relationships:
               to: ref('dim_book')
               field: DIM_BOOK_ID
+      - name: FCT_STOCK_UPDATE_ID
+        tests:
+          - not_null
+          - unique
