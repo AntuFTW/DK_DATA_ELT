@@ -88,6 +88,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
           - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: DIM_DATE_ID
       - name: FCT_SALE_CREATED_AT_TIME
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
@@ -98,6 +101,9 @@ models:
           - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
           - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: DIM_DATE_ID
       - name: FCT_SALE_UPDATED_AT_TIME
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
@@ -123,22 +129,28 @@ models:
       - name: FCT_STOCK_UPDATE_CREATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
+              column_type: varchar
           - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: DIM_DATE_ID
       - name: FCT_STOCK_UPDATE_CREATED_AT_TIME
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: time
+              column_type: time
           - not_null
       - name: FCT_STOCK_UPDATE_UPDATED_AT_DATE_ID
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
+              column_type: varchar
           - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: DIM_DATE_ID
       - name: FCT_STOCK_UPDATE_UPDATED_AT_TIME
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: time
+              column_type: time
           - not_null
       # Check that the size of the graph does not change as there may not be a date for every date in the first table (singular/generic test for this)
   - name: dim_date

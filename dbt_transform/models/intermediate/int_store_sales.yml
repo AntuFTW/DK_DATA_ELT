@@ -18,5 +18,15 @@ models:
           - not_null
   - name: int_store_sales__preprocess_author
     description: Separates Authors into a list
+    columns:
+      - name: AUTHOR_ARRAY
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: array
   - name: int_store_sales__single_author_rows
     description: There is now one author per row instead of multiple. This increases the number of rows of the table.
+    columns:
+      - name: AUTHOR_NAME
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: varchar
