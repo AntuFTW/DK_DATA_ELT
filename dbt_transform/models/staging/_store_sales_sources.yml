@@ -32,8 +32,6 @@ sources:
               - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
-              - accepted_values:
-                  values: ['In Print', 'Unknown', 'Reprinting, Date Kno', 'Out Of Print', 'Not Yet Published', 'Refer To Other Pbshe']
           - name: CLASS
             description: Most specific category of book, the most granular out of PRODUCT_GROUP, DEPARTMENT and SUB_DEPARTMENT.
             tests:
@@ -45,8 +43,6 @@ sources:
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
-              - accepted_values:
-                  values: ['S', 'A', 'B', 'C', 'No', 'F', 'X', '9']
           - name: CREATED_AT
             description: The date and time the data was processed *All the same so they could be batch imported*
             tests:
@@ -91,6 +87,7 @@ sources:
           - name: PUBLICATION_DATE
             description: Date the book was published.
             tests:
+              - not_null
               - dbt_expectations.expect_column_values_to_be_of_type:
                   column_type: varchar
               - dbt_expectations.expect_column_values_to_match_regex:

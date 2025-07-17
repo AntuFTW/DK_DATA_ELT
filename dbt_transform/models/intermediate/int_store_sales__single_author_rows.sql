@@ -1,7 +1,7 @@
     select
         {{ dbt_utils.star(
             from=ref('int_store_sales__preprocess_author'),
-            except=['AUTHOR_ARRAY']
+            except=['AUTHOR_ARRAY', 'AUTHOR']
         ) }},
         f.value::string as AUTHOR_NAME -- 'value' is column with unpacked authors
     from

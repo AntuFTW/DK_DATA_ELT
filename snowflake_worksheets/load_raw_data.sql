@@ -52,5 +52,5 @@ copy into RAW_STORE_SALES
 FROM @dk_data/store_sales.csv;
 
 -- Checks if the table has been created
-SELECT PUBLISHER FROM raw_store_sales
+SELECT * FROM raw_store_sales
 LIMIT 5;

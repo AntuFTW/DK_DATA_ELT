@@ -9,7 +9,10 @@ with unique_stores as (
 )
 select
     {{ dbt_utils.generate_surrogate_key([
-        'DIM_STORE_DK_NUMBER'
+        'DIM_STORE_DK_NUMBER',
+        'DIM_STORE_NAME',
+        'DIM_STORE_AREA_NUMBER',
+        'DIM_STORE_AREA_NAME'
     ]) }} as DIM_STORE_ID,
     *
 from

@@ -3,6 +3,7 @@ with unique_books as (
         distinct pa.ISBN as DIM_BOOK_ISBN,
         TITLE as DIM_BOOK_TITLE,
         PUBLISHER as DIM_BOOK_PUBLISHER,
+        RRP as DIM_BOOK_RRP,
         IMPRINT as DIM_BOOK_IMPRINT,
         dd.DIM_DATE_ID as DIM_BOOK_PUBLICATION_DATE_ID,
         PRODUCT_GROUP as DIM_BOOK_PRODUCT_GROUP,
@@ -17,7 +18,17 @@ with unique_books as (
 unique_books_date_to_be_normalised as (
     select
         {{ dbt_utils.generate_surrogate_key([
-            'DIM_BOOK_ISBN'
+            'DIM_BOOK_ISBN',
+            'DIM_BOOK_TITLE',
+            'DIM_BOOK_PUBLISHER',
+            'DIM_BOOK_RRP',
+            'DIM_BOOK_IMPRINT',
+            'DIM_BOOK_PUBLICATION_DATE_ID',
+            'DIM_BOOK_PRODUCT_GROUP',
+            'DIM_BOOK_DEPARTMENT',
+            'DIM_BOOK_SUB_DEPARTMENT',
+            'DIM_BOOK_CLASS',
+            'DIM_BOOK_RRP_VALID_FROM'
         ]) }} as DIM_BOOK_ID,
         *,
         null::DATE as DIM_BOOK_RRP_VALID_TO,
