@@ -1,6 +1,6 @@
 # Data modeling for DK analytics
 
-The goal of the final data model is to allow the model to be connected to a BI tool, like Powder BI, and allow analysts to query data reliably. Questions such as "What book titles are highest-grossing in each store location?" should be able to be answered using the model. There is also an immediate need for the model so it should be quick to develop. Finally the model should also run efficiently, be scalable and be easy to use.
+The goal of the final data model is to allow the model to be connected to a BI tool, like Power BI, and allow analysts to query data reliably. Questions such as "What book titles are highest-grossing in each store location?" should be able to be answered using the model. There is also an immediate need for the model so it should be quick to develop. Finally the model should also run efficiently, be scalable and be easy to use.
 
 ---
 
@@ -13,33 +13,33 @@ Before you begin, ensure you have the following installed and configured:
 * **SnowCLI**: Needed to run Snowflake commands from the terminal.
 
 ### 1. Create Snowflake environment and Load data into RAW table
-After setting up SnowCLI and connecting it to your Snowflake account, run the two commands bellow from the root of this repository. These set up the Snowflake environment and then load data into an internal Snowflake stage and then copy this data into a RAW data table which is referenced by dbt.
+After setting up SnowCLI and connecting it to your Snowflake account, run the two commands bellow from the root of this repository. These set up the Snowflake environment and then load data into an internal Snowflake stage and then copy this data into a RAW data table which is referenced by dbt. Note: make sure dbt will create views and tables in the `ANALYTICS` schema that is created.
 
 `snow sql --connection <name_of_snowflake_connection> --filename snowflake_worksheets/create_environment.sql` -> Sets up the Snowflake role, warehouse, database, schemas and tables.
 
 `snow sql --connection <name_of_snowflake_connection> --filename snowflake_worksheets/load_raw_data.sql` -> Created an internal stage and uploads the CSV to it. It then creates the `RAW_STORE_SALES` table in the `RAW` schema and copies the CSV data to this table.
 
 ### 2. Download dbt core and set up Python environment (commands are for MacOS)
-Move to the `dbt_transform` directory and create a virtual environment. Activate the venv then download the requirements in the `requirements.txt` file.
+Move to the `dbt_transform` directory and create a virtual environment. Activate the venv, then download the requirements in the `requirements.txt` file.
 
-`python3 -m venv .venv` -> Creates venv
-`source .venv/bin/activate` -> Activates venv
-`pip3 install -r requirements.txt` -> Downloads dependencies in venv
+- `python3 -m venv .venv` -> Creates venv
+- `source .venv/bin/activate` -> Activates venv
+- `pip3 install -r requirements.txt` -> Downloads dependencies in venv
 
 ### 3. Run dbt models and generate dbt documentation
-The dbt models created are explained in this read me, but alternatively you can create the documentation and host this locally.
+The dbt models created are explained in this README, but some information is also included in the dbt docs. This can also be useful to visualise and interact with the dbt DAG.
 First download dbt package dependencies. After this build all the models and if everything runs successfully then tables will materialise in the `ANALYTICS` schema as tables.
 
-`dbt deps` -> Downloads the dbt packages
-`dbt build` -> Builds and tests all the dbt models
-`dbt docs generate` -> Generates documentation
-`dbt docs serve` -> Serves the documentation on a local web server
+- `dbt deps` -> Downloads the dbt packages
+- `dbt build` -> Builds and tests all the dbt models
+- `dbt docs generate` -> Generates documentation
+- `dbt docs serve` -> Serves the documentation on a local web server
 
 ---
 
 ##  🗄️ Final ERD diagram
 
-The first part of the project was to understand the input data and the goal of the data modeling. **Table 1** was created to understand the columns in the `RAW` input data. The goal of the final data model is to allow the analytics team to easily query data in a efficient, clean and reliable manner. In turn this allows the analytics team to answer questions similar to "Which book titles are the highest-grossing in each store location?". This goal clearly aligns with an OLAP (Online Analytics Processing) data model due to the goal of analysis coupled with the fact a massive amount of data will be stored in the model.
+The first part of the project was to understand the input data and the goal of the data modeling. **Table 1** was created to understand the columns in the `RAW_STORE_SALES` input data. The goal of the final data model is to allow the analytics team to easily query data in a efficient, clean and reliable manner. In turn this allows the analytics team to answer questions similar to "Which book titles are the highest-grossing in each store location?". This goal clearly aligns with an OLAP (Online Analytics Processing) data model due to the goal of analysis coupled with the fact a massive amount of data will be stored in the model. In addition to this OLAP models are faster to develop as they are less normalised that alternatives.
 
 | **COLUMN NAME** |                     **DESCRIPTION**                     |
 |:----------------|:--------------------------------------------------------|
@@ -69,13 +69,14 @@ The first part of the project was to understand the input data and the goal of t
 |QTY_SOLD|Number of copies of he book sold by the store within a specific reporting period.|
 |HUB_QTY_ON_HAND|Total number of units of a book that are currently physically present and available in the central hub's inventor.|
 |HUB_QTY_ON_ORDER|Number of units that have bee ordered from the central hub's inventory but have not been received.|
+
 **Table 1: RAW column annotations**
 
-OLAP processes generally tend to favor STAR schemas as these allow for easy and reliable queries as well as efficient aggregations, however the price for this is de-normalised data and repetition. This means if you want to change or update a value in a OLAP database you generally have to do it more than one place. On the contrary a 3NF (3rd normal form) databases are highly normalised and built for OLTP (Online Transaction Process) so if a value needs to be updated it only has to be done in one place. However, this results in complex and long queries which are inefficient due to the number of joins.
+OLAP processes generally tend to favor STAR schemas as these allow for easy and reliable queries as well as efficient aggregations, however the price for this is de-normalised data and repetition (hence more storage). This means if you want to change or update a value in a OLAP database you generally have to do it more than one place. On the contrary a 3NF (3rd normal form) databases are highly normalised and built for OLTP (Online Transaction Process) so if a value needs to be updated, deleted or inserted (CRUD) it only has to be done in one place. However, this results in complex and long queries which are inefficient due to the number of joins.
 
-As a result I aimed to model the data around a STAR schema as this lends itself better to this problem. However a pure STAR schema was not possible, considering the goals, and a Snowflake schema was used instead which can be though of as a more normalised STAR schema or midpoint between 3NF and STAR. The ERD diagram of the final model used is shown in **Fig 1**.
+The data is modeled around a STAR schema as this lends itself better to this problem. However a pure STAR schema was not possible, considering the goals, and a Snowflake schema was used instead which can be thought of as a more normalised STAR schema or midpoint between 3NF and STAR. The ERD diagram of the final model used is shown in **Fig 1**.
 
-The main reason I created a Snowflake schema rather than a STAR schema is due to the many to many relationship between Books as Authors as a Book can have many Authors and an Author can have many books. This meant that if I wanted to avoid storing an array in a column, which goes against database design principles as it makes data hard to query and filter, I would need to create a separate author dimension table and link this to the book dimension table via a bridge table. This meant I could turn a many to many relationship into two one to many relationships. The downside of this is that queries with authors need more joins which take longer.
+The main reason a Snowflake schema is used, rather than a STAR schema, is due to the many to many relationship between books and authors as a book can have many authors and an author can have many books. This meant that if I wanted to avoid storing an array in a column, which goes against database design principles as it makes data hard to query and filter, I would need to create a separate author dimension table and link this to the book dimension table via a bridge table. This meant I could turn a many to many relationship into two one to many relationships. The downside of this is that queries with authors need more joins which take longer.
 
 ![ERD_diagram](ERD_diagram.png)
 
@@ -87,7 +88,7 @@ The three columns are:
 
 These additions to the table meant that the model would be more reliable and scalable.
 
-I would also like to mention the date dimension table. This table was added so the analytics team can use date and time data easier as it contains more useful information about the date such as the day of the week, the month and the quarter which is useful information to run aggregates against for example. It also reduced run time for many queries as it removes the need to run expensive functions such as `YEAR()`. This comes at the cost of having to join the data, and needing more storage. However the ease of use and the fact that expensive functions do not need to be run out weigh the negatives. In addition to this storage is generally cheap.
+I would also like to mention the date dimension table. This table was added so the analytics team can use date and time data easier as it contains more useful information about the date such as the day of the week, the month and the quarter which is useful information to run aggregates against. It also reduced run time for many queries as it removes the need to run functions such as `YEAR()` as these are pre-computed. This comes at the cost of having to join the data, and needing more storage. However the ease of use and the fact that expensive do not need to be run out weigh the negatives. In addition to this storage is generally cheap.
 
 ---
 
