@@ -88,7 +88,7 @@ The three columns are:
 
 These additions to the table meant that the model would be more reliable and scalable.
 
-I would also like to mention the date dimension table. This table was added so the analytics team can use date and time data easier as it contains more useful information about the date such as the day of the week, the month and the quarter which is useful information to run aggregates against. It also reduced run time for many queries as it removes the need to run functions such as `YEAR()` as these are pre-computed. This comes at the cost of having to join the data, and needing more storage. However the ease of use and the fact that expensive do not need to be run out weigh the negatives. In addition to this storage is generally cheap.
+I would also like to mention the date dimension table. This table was added so the analytics team can use date and time data easier as it contains more useful information about the date such as the day of the week, the month and the quarter which is useful information to run aggregates against. This comes at the cost of having to join the data, and needing more storage. However the ease of use and extra pre-computed information in the table is worth it. In addition to this storage is generally cheap.
 
 ---
 
