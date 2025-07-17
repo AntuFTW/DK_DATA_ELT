@@ -1,4 +1,5 @@
-# [Modeling DK sale data for analysis]
+# Data modeling for DK analytics
+
 
 
 
@@ -99,8 +100,11 @@ The singular tests are defined in [/dbt_transform/tests/singular/](dbt_transform
 
 The DAG of the dbt work flow is shown in **Fig 2**. 
 
-![DBT_DAG](dbt_DAG.png)
+![DBT_DAG](DAG.png)
 **Fig 2: DAG with not tests**
+
+![DBT_DAG](DAG_tests.png)
+**Fig 3: DAG with tests**
 
 
 ### Source tests
@@ -131,11 +135,11 @@ The fifth and final intermediate model is [int_store_sales__single_author_rows](
 
 All the queries in this directory create the tables shown in the ERD diagram in **Fig 1**. Each of the names of the models correspond to the table it creates from the ERD. The main way these models were tested is by checking the relationships between keys, checking that columns were of the right type, columns were unique and also columns were not_null.
 
-The [dim_date](dbt_transform/models/marts/dim_date.sql) model creates the dim_date table. This contains information about every day from 2020-01-01 to 2030-12-31, this information includes the month, day, day of the year, day of the months, the quarter and more. To create this the external macro `dbt_date.get_date_dimension` was used.
+The [dim_date](dbt_transform/models/marts/dim_date.sql) model creates the dim_date table. This contains information about every day from 2000-01-01 to 2050-12-31, this information includes the month, day, day of the year, day of the months, the quarter and more. To create this the external macro `dbt_date.get_date_dimension` was used.
 
 The [dim_author](dbt_transform/models/marts/dim_author.sql) model creates the dim_author table. This contains every distinct author name in the input data. The assumption made is that authors are distinguishable from just their name which is not true in reality as two different authors can have the same, however this is a limitation of the data. A surrogate key is generated using the `AUTHOR_NAME` which acts as the primary key. To test this model I made sure that both the `DIM_AUTHOR_ID` and `DIM_AUTHOR_NAME` were unique and not null.
 
-The [dim_book](dbt_transform/models/marts/dim_book.sql) model creates the dim_book table. This contains every distinct book which are classified as distinct using `ISBN`, `TITLE`, `RRP`, `IMPRINT`, `PUBLICATION_DATE`, `PRODUCT_GROUP`, `BOOK_DEPARTMENT`, `SUB_DEPARTMENT`, `CLASS` and `RRP_VALID_FROM`. This table is a type 2 Slowly Changing Dimension table so the `DIM_BOOK_RRP_VALID_FROM`, `DIM_BOOK_RRP_VALID_TO` and `DIM_BOOK_RRP_CURRENTLY_VALID` were added and tests were done to make sure  these columns are the correct data type. The tests on this table was to check if the surrogate key created is unique and not null, if the ISBN of the books are unique and not not_null (these do not have to be unique as there can be different RRP) and the `PUBLICATION_DATE_ID` was not_null and a varchar. Relationship between `dim_book` and `dim_date` was tested to make sure the `DIM_BOOK_PUBLICATION_DATE_ID` corresponded to a `DIM_DATE_ID` in the dim_date table.
+The [dim_book](dbt_transform/models/marts/dim_book.sql) model creates the dim_book table. This contains every distinct book (the same ISBN with different RRP are classified as different rows) which are classified as distinct using DIM_BOOK_ISBN, `DIM_BOOK_RRP`, `DIM_BOOK_TITLE` `DIM_BOOK_PUBLISHER`, `DIM_BOOK_IMPRINT`, `DIM_BOOK_PUBLICATION_DATE_ID`, `DIM_BOOK_RRP_VALID_FROM_DATE_ID`, `DIM_BOOK_PRODUCT_GROUP`, `DIM_BOOK_DEPARTMENT`, `DIM_BOOK_SUB_DEPARTMENT`, `DIM_BOOK_CLASS`. This table is a type 2 Slowly Changing Dimension table so the `DIM_BOOK_RRP_VALID_FROM`, `DIM_BOOK_RRP_VALID_TO` and `DIM_BOOK_RRP_CURRENTLY_VALID` were added and tests were done to make sure  these columns are the correct data type. The tests on this table was to check if the surrogate key created is unique and not null, if the ISBN of the books are unique and not not_null (these do not have to be unique as there can be different RRP) and the `PUBLICATION_DATE_ID` was not_null and a varchar. Relationship between `dim_book` and `dim_date` was tested to make sure the `DIM_BOOK_PUBLICATION_DATE_ID` corresponded to a `DIM_DATE_ID` in the dim_date table.
 
 The [bridge_book_author](dbt_transform/models/marts/bridge_book_author.sql) model creates the bridge_book_author table. This contains a mapping for books to all their respective authors. The surrogate key is created using `DIM_BOOK_ID` and `DIM_AUTHOR_ID`, this key is then checked for uniqueness and for null values. There are two relationship tests to make sure the author and book IDs are present in their respective tables.
 
@@ -145,6 +149,6 @@ The [fct_sale](dbt_transform/models/marts/fct_sale.sql) model creates the fact t
 
 ### Main assumptions and difficulties
 
-The main challenge I faced is finding a way to dynamically fill in the `DIM_BOOK_RRP_VALID_FROM_DATE_ID`, `DIM_BOOK_RRP_VALID_TO_DATE_ID` and `DIM_BOOK_RRP_CURRENTLY_VALID` in the dim_book table. Right now it works by testing if there is only one RRP per ISBN so this means that `DIM_BOOK_RRP_VALID_TO_DATE_ID` is always null, `DIM_BOOK_RRP_VALID_FROM_DATE_ID` is the `CREATED_AT` date and `DIM_BOOK_RRP_CURRENTLY_VALID` is always true. This has not been fixed yet but should be fixed to make sure the pipeline runes for.
+- One challenge was finding a way to dynamically fill the book table to make sure that it followed the type 2 SCD constraint put on it.
 
 The time constraint meant I could not make sure everything with the project was perfect.

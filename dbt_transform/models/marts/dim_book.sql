@@ -6,6 +6,10 @@ with unique_book_valid_from as (
         PUBLISHER,
         IMPRINT,
         PUBLICATION_DATE,
+        PRODUCT_GROUP,
+        DEPARTMENT,
+        SUB_DEPARTMENT,
+        CLASS,
         min(CREATED_AT::date) as VALID_FROM
     from
         {{ ref('int_store_sales__single_author_rows') }}
@@ -15,7 +19,11 @@ with unique_book_valid_from as (
         TITLE,
         PUBLISHER,
         IMPRINT,
-        PUBLICATION_DATE
+        PUBLICATION_DATE,
+        PRODUCT_GROUP,
+        DEPARTMENT,
+        SUB_DEPARTMENT,
+        CLASS
 ),
 unique_book_valid_from_and_to as (
     select
@@ -32,6 +40,10 @@ dim_book_no_date_id as (
         PUBLICATION_DATE as DIM_BOOK_PUBLICATION_DATE,
         IMPRINT as DIM_BOOK_IMPRINT,
         RRP as DIM_BOOK_RRP,
+        PRODUCT_GROUP as DIM_BOOK_PRODUCT_GROUP,
+        DEPARTMENT as DIM_BOOK_DEPARTMENT,
+        SUB_DEPARTMENT as DIM_BOOK_SUB_DEPARTMENT,
+        CLASS as DIM_BOOK_CLASS,
         VALID_FROM as DIM_BOOK_RRP_VALID_FROM,
         VALID_TO as DIM_BOOK_RRP_VALID_TO,
         (VALID_TO is null) as DIM_BOOK_RRP_CURRENTLY_VALID -- The flag is now dynamic
@@ -45,6 +57,10 @@ date_id_joined as (
         DIM_BOOK_PUBLISHER,
         DIM_BOOK_IMPRINT,
         DIM_BOOK_RRP,
+        DIM_BOOK_PRODUCT_GROUP,
+        DIM_BOOK_DEPARTMENT,
+        DIM_BOOK_SUB_DEPARTMENT,
+        DIM_BOOK_CLASS,
         DIM_BOOK_RRP_CURRENTLY_VALID,
         dim_date_pub_date.DIM_DATE_ID as DIM_BOOK_PUBLICATION_DATE_ID,
         dim_date_valid_from.DIM_DATE_ID as DIM_BOOK_RRP_VALID_FROM_DATE_ID,
@@ -63,7 +79,11 @@ select
     'DIM_BOOK_PUBLISHER',
     'DIM_BOOK_IMPRINT',
     'DIM_BOOK_PUBLICATION_DATE_ID',
-    'DIM_BOOK_RRP_VALID_FROM_DATE_ID']) }} as DIM_BOOK_ID,
+    'DIM_BOOK_RRP_VALID_FROM_DATE_ID',
+    'DIM_BOOK_PRODUCT_GROUP',
+    'DIM_BOOK_DEPARTMENT',
+    'DIM_BOOK_SUB_DEPARTMENT',
+    'DIM_BOOK_CLASS']) }} as DIM_BOOK_ID,
     *
 from
     date_id_joined
