@@ -163,6 +163,6 @@ The [fct_sale](dbt_transform/models/marts/fct_sale.sql) model creates the fact t
 
 - Assumed that authors were distinct based on names. This is generally not true as two authors can have the same name, however there was no way of verifying authors with different names as different without using extra data.
 
-- Assumed that combination of different columns eg. `STORE_NUMBER`, `STORE_NAME`, `AREA_NUMBER` and `AREA_NAME` would mean a unique store. This is not explicitly states but is a reasonable assumption for the columns I did this in.
+- Assumed that combination of different columns eg. `STORE_NUMBER`, `STORE_NAME`, `AREA_NUMBER` and `AREA_NAME` would mean a unique store. This is not explicitly stated but is a reasonable assumption for the columns I did this in.
 
 - If there is no Author name, then there is no Author for the book.
